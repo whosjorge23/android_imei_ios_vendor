@@ -10,8 +10,9 @@ class AddProductForm extends StatefulWidget {
 }
 
 class _AddProductFormState extends State<AddProductForm> {
-  late final Map<String, dynamic>? _productMap;
+  late Map<String, dynamic>? _productMap;
   final _formKey = GlobalKey<FormBuilderState>();
+  final List _items = [];
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +69,9 @@ class _AddProductFormState extends State<AddProductForm> {
                   } else {
                     print("validation failed");
                   }
+                  _items.add(_productMap);
                   Future.delayed(Duration(seconds: 5), () {
-                    print(_productMap);
+                    print(_items);
                   });
                 }
               },
