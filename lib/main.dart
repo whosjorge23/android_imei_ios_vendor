@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer' as developer;
 import 'dart:io';
 
+import 'package:android_imei_ios_vendor/add_prod_form.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,7 @@ import 'package:flutter/services.dart';
 
 void main() {
   runZonedGuarded(() {
-    runApp(const MyApp());
+    runApp(MaterialApp(home: const MyApp()));
   }, (dynamic error, dynamic stack) {
     developer.log("Something went wrong!", error: error, stackTrace: stack);
   });
@@ -117,46 +118,55 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            Platform.isAndroid
-                ? 'Android Device Info'
-                : Platform.isIOS
-                    ? 'iOS Device Info'
-                    : '',
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          Platform.isAndroid
+              ? 'Android Device Info'
+              : Platform.isIOS
+                  ? 'iOS Device Info'
+                  : '',
         ),
-        body: ListView(
-          children: _deviceData.keys.map(
-            (String property) {
-              return Row(
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.all(10.0),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  new MaterialPageRoute(
+                      builder: (context) => new AddProductForm()),
+                );
+              },
+              icon: Icon(Icons.add))
+        ],
+      ),
+      body: ListView(
+        children: _deviceData.keys.map(
+          (String property) {
+            return Row(
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    property,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
                     child: Text(
-                      property,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      '${_deviceData[property]}',
+                      maxLines: 10,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
-                      child: Text(
-                        '${_deviceData[property]}',
-                        maxLines: 10,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ).toList(),
-        ),
+                ),
+              ],
+            );
+          },
+        ).toList(),
       ),
     );
   }
